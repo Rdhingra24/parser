@@ -1,0 +1,15 @@
+/Users/sonam/parser/src/main/java/com/test/parser/demo/processor/TextFileProcessor.java
+/Users/sonam/parser/src/main/java/com/test/parser/demo/controller/FileController.java
+/Users/sonam/parser/src/main/java/com/test/parser/demo/exception/ExceptionHandler.java
+/Users/sonam/parser/src/main/java/com/test/parser/demo/model/FileType.java
+/Users/sonam/parser/src/main/java/com/test/parser/demo/exception/ApiError.java
+/Users/sonam/parser/src/main/java/com/test/parser/demo/processor/TextReader.java
+/Users/sonam/parser/src/main/java/com/test/parser/demo/processor/CsvFileReader.java
+/Users/sonam/parser/src/main/java/com/test/parser/demo/service/FileService.java
+/Users/sonam/parser/src/main/java/com/test/parser/demo/processor/CsvFileWriter.java
+/Users/sonam/parser/src/main/java/com/test/parser/demo/utils/Helper.java
+/Users/sonam/parser/src/main/java/com/test/parser/demo/processor/CsvFileProcessor.java
+/Users/sonam/parser/src/main/java/com/test/parser/demo/configuration/Configuration.java
+/Users/sonam/parser/src/main/java/com/test/parser/demo/processor/Processor.java
+/Users/sonam/parser/src/main/java/com/test/parser/demo/DemoApplication.java
+/Users/sonam/parser/src/main/java/com/test/parser/demo/processor/TextFileWriter.java

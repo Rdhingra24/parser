@@ -1,0 +1,15 @@
+com/test/parser/demo/processor/CsvFileProcessor.class
+com/test/parser/demo/service/FileService.class
+com/test/parser/demo/processor/TextFileProcessor.class
+com/test/parser/demo/utils/Helper.class
+com/test/parser/demo/processor/CsvFileReader.class
+com/test/parser/demo/controller/FileController.class
+com/test/parser/demo/exception/ExceptionHandler.class
+com/test/parser/demo/configuration/Configuration.class
+com/test/parser/demo/processor/CsvFileWriter.class
+com/test/parser/demo/processor/TextReader.class
+com/test/parser/demo/DemoApplication.class
+com/test/parser/demo/exception/ApiError.class
+com/test/parser/demo/processor/Processor.class
+com/test/parser/demo/processor/TextFileWriter.class
+com/test/parser/demo/model/FileType.class
