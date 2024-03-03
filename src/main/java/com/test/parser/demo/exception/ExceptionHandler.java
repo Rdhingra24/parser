@@ -18,4 +18,10 @@ public class ExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler(UnsupportedOperationException.class)
+    public ResponseEntity<?> invalidFile(UnsupportedOperationException ex) {
+        ApiError apiError = new ApiError(HttpStatus.UNSUPPORTED_MEDIA_TYPE, ex.getMessage(), System.currentTimeMillis());
+        return new ResponseEntity<>(apiError, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+    }
+
 }

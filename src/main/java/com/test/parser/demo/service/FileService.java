@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.test.parser.demo.utils.Helper.getProcessor;
+
 @Service
 @Slf4j
 public class FileService {
@@ -30,13 +33,16 @@ public class FileService {
 
     @Getter
     private String fileUploadDirectory;
+
+    @Getter
+    private String fileDownloadDirectory;
     private final ConcurrentHashMap<String, Boolean> processingFiles = new ConcurrentHashMap<>();
 
     @PostConstruct
     public void init() {
         try {
-            String fileUploadDir = configuration.getFileUploadDir();
-            this.fileUploadDirectory = fileUploadDir;
+            this.fileUploadDirectory = configuration.getFileUploadDir();
+            this.fileDownloadDirectory = configuration.getFileDownloadDir();
             Files.createDirectories(Paths.get(fileUploadDirectory));
         } catch (IOException e) {
             throw new RuntimeException("Could not create upload directory!", e);
@@ -59,16 +65,10 @@ public class FileService {
 
     @Async
     public void processFileInAsyncMode(String fileId) {
-        try {
-            log.info("status completed");
-            processingFiles.put(fileId,true);
-            Thread.sleep(60000);
-            processingFiles.put(fileId,false);
-            log.info("status completed [{}]--> [{}]",fileId,processingFiles.get(fileId));
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException(e);
-        }
+        processingFiles.put(fileId,true);
+        getProcessor(fileId).process(fileId,configuration.getFileUploadDir(),configuration.getFileDownloadDir());
+        processingFiles.put(fileId,false);
+        log.info("status completed [{}]--> [{}]",fileId,processingFiles.get(fileId));
 
     }
 
@@ -76,20 +76,25 @@ public class FileService {
         if(processingFiles.getOrDefault(fileName,false)){
             return ResponseEntity.status(HttpStatus.LOCKED).body("File is still processing. Please try again later.");
         }
-        Path filePath = Paths.get(getFileUploadDirectory()).resolve(fileName).normalize();
+        Path filePath = Paths.get(getFileDownloadDirectory()).resolve(fileName).normalize();
         log.info("Try to get file from [{}]",filePath);
         try {
             Resource resource = new UrlResource(filePath.toUri());
+            byte[] data = Files.readAllBytes(filePath);
+
             if(resource.exists() && resource.isReadable()) {
                 log.info("File [{}] found, all okay!!",filePath);
-                return ResponseEntity.ok().body(resource);
+                return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)
+                        .body(data);
             } else {
                 log.info("File [{}] NOT found, something is wrong!!",filePath);
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("no file by this ID found. Please try again.");
             }
         } catch (MalformedURLException ex) {
             log.info("OOPS!! [{}]",ex.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ex.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
